@@ -21,6 +21,8 @@ function useUsers(){
   const [users, setUsers] = useState(null)
   useEffect(()=>{
     fetchingUsers(setUsers)
+    const title = document.querySelector('title')
+    title.innerText = 'ABM'
   }, [])
   return [users,setUsers]
 }
