@@ -50,4 +50,20 @@ form {
 
 table {
     margin: auto;
+    width: 80%;
+    text-align: center;
+    border-collapse: collapse;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+    & > thead {
+        background-color: #0d6efd;
+        color: white;
+        & > tr > th {
+            padding: 1rem;
+        }}
+        & > tbody > tr > td {
+            padding: 1rem;
+            border: 1px solid #0d6efd;
+        }
 }
