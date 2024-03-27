@@ -31,7 +31,7 @@ function App() {
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
   useEffect(()=>{
-    localStorage.setItem('users', JSON.stringify(users))
+    sessionStorage.setItem('users', JSON.stringify(users))
   }, [users])
   function removeUser(id){
     return ()=>{setUsers(users.filter(user=>user.id !== id))}
