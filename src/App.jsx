@@ -60,7 +60,7 @@ function App() {
               <td>{user.email}</td>
               <td>{user.address.street}</td>
               <td>{user.phone}</td>
-              <td><button onClick={()=>{setModify(true);setUser(user);setErrors([])}}>Edit</button><button onClick={removeUser(user.id)} className='remove'>x</button></td>
+              <td><button style={{backgroundColor: 'green'}} onClick={()=>{setModify(true);setUser(user);setErrors([])}}>Editar</button><button onClick={removeUser(user.id)} className='remove'>x</button></td>
             </tr>
           ))}
         </tbody>
