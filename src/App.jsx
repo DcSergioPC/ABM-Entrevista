@@ -11,9 +11,9 @@ function fetchingUsers(setUsers){
   fetch('https://jsonplaceholder.typicode.com/users')
     .then((response) => response.json())
     .then((data) => {
+      console.log("Fetching")
       sessionStorage.setItem('users', JSON.stringify(data))
       setUsers(data)
-      console.log(data)
     })
 }
 
@@ -30,7 +30,6 @@ function App() {
   const [errors, setErrors] = useState([])
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
-  console.log(users)
   useEffect(()=>{
     localStorage.setItem('users', JSON.stringify(users))
   }, [users])
@@ -39,7 +38,7 @@ function App() {
   }
   const Lista = ({users: Array}) =>(
     <>
-      <h1>Lista de usuarios</h1>
+      <h2>Lista de usuarios</h2>
       <table style={{textAlign: 'left'}}>
           <thead>
             <tr style={{textAlign: 'center'}}>
@@ -78,7 +77,7 @@ function App() {
     }
     const Alta = ({edit=false, user}) =>(
       <>
-        <h1>{edit && user ?  `Editar Usuario ${user.id} ${user.name}` :"Crear usuario"}</h1>{edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
+        <h2>{edit && user ?  `Editar Usuario ${user.id} ${user.name}` :"Crear usuario"}</h2>{edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
         <form onSubmit={(e)=>{
             e.preventDefault()
             const form = e.target
@@ -125,6 +124,7 @@ function App() {
 
   return (
     <>
+      <h1>ABM</h1>
       {!modify && <Alta />}
       {modify && <Alta edit={true} user={user} />}
       {!modify && <Lista users={users}/>}
