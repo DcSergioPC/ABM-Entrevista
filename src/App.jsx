@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import './styles.css'
-import { defaultUsers } from './users'
 function fetchingUsers(setUsers){
-  if (sessionStorage.getItem('users')) {
-    setUsers(JSON.parse(sessionStorage.getItem('users')))
+  if (localStorage.getItem('users') && JSON.parse(localStorage.getItem('users'))) {
+    console.log(JSON.parse(localStorage.getItem('users')))
+    setUsers(JSON.parse(localStorage.getItem('users')))
     console.log("Skip Fetching")
     return
   }
@@ -12,7 +12,7 @@ function fetchingUsers(setUsers){
     .then((response) => response.json())
     .then((data) => {
       console.log("Fetching")
-      sessionStorage.setItem('users', JSON.stringify(data))
+      localStorage.setItem('users', JSON.stringify(data))
       setUsers(data)
     })
 }
@@ -33,12 +33,12 @@ function App() {
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
   useEffect(()=>{
-    sessionStorage.setItem('users', JSON.stringify(users))
+    localStorage.setItem('users', JSON.stringify(users))
   }, [users])
   function removeUser(id){
     return ()=>{setUsers(users.filter(user=>user.id !== id))}
   }
-  const Lista = ({users: Array}) =>(
+  const Lista = ({users}) =>(
     <>
       <h2>Lista de usuarios</h2>
       <table style={{textAlign: 'left'}}>
@@ -109,15 +109,24 @@ function App() {
             setUsers([newUser,...users])
             form.reset()
           }}>
-          <input type="text" name='name' placeholder="Nombre" defaultValue={user ? user.name :""} />
+          <label>Nombre</label>
+          <input type="text" name='name' placeholder="Juan Perez" defaultValue={user ? user.name :""} />
           {errors.name && <div>{errors.name}</div>}
-          <input type="text" name='username' placeholder="Usuario" defaultValue={user ? user.username :""} />
+          
+          <label>Usuario</label>
+          <input type="text" name='username' placeholder="juanpe" defaultValue={user ? user.username :""} />
           {errors.username && <div>{errors.username}</div>}
-          <input type="email" name='email' placeholder="Email" defaultValue={user ? user.email :""} />
+          
+          <label>Email</label>
+          <input type="email" name='email' placeholder="janpe@mail.com" defaultValue={user ? user.email :""} />
           {errors.email && <div>{errors.email}</div>}
-          <input type="text" name='address' placeholder="Dirección" defaultValue={user ? user.address.street :""} />
+          
+          <label>Dirección</label>
+          <input type="text" name='address' placeholder="Calle 1" defaultValue={user ? user.address.street :""} />
           {errors.address && <div>{errors.address}</div>}
-          <input type="text" name='phone' placeholder="Telefono" defaultValue={user ? user.phone :""} />
+          
+          <label>Telefono</label>
+          <input type="text" name='phone' placeholder="123456789" defaultValue={user ? user.phone :""} />
           {errors.phone && <div>{errors.phone}</div>}
           <button type='submit' style={edit ? {backgroundColor: "green"}:{}}>{edit ? "Editar" : "Crear"}</button>
         </form>
