@@ -18,11 +18,17 @@ function fetchingUsers(setUsers){
 
 function useUsers(){
   const [users, setUsers] = useState(null)
+
+  useEffect(()=>{
+    if(users) localStorage.setItem('users', JSON.stringify(users))
+  }, [users])
+
   useEffect(()=>{
     fetchingUsers(setUsers)
     const title = document.querySelector('title')
     title.innerText = 'ABM'
   }, [])
+  
   return [users,setUsers]
 }
 
@@ -31,18 +37,22 @@ function App() {
   const [errors, setErrors] = useState([])
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
-  useEffect(()=>{
-    if(users) localStorage.setItem('users', JSON.stringify(users))
-  }, [users])
   function removeUser(id){
-    return ()=>{setUsers(users.filter(user=>user.id !== id))}
+    return ()=>{setUsers(users.filter(user => user.id !== id))}
+  }
+  function comeBack(user){
+    return ()=>{
+      setModify(true)
+      setUser(user)
+      setErrors([])
+    }
   }
   const Lista = ({users}) =>(
     <>
       <h2>Lista de usuarios</h2>
-      <table style={{textAlign: 'left'}}>
+      <table>
           <thead>
-            <tr style={{textAlign: 'center'}}>
+            <tr>
               <th>Nombre</th>
               <th>Usuario</th>
               <th>Correo</th>
@@ -59,7 +69,10 @@ function App() {
               <td>{user.email}</td>
               <td>{user.address.street}</td>
               <td>{user.phone}</td>
-              <td><button style={{backgroundColor: 'green'}} onClick={()=>{setModify(true);setUser(user);setErrors([])}}>Editar</button><button onClick={removeUser(user.id)} className='remove'>x</button></td>
+              <td>
+                <button className='btn-green' onClick={comeBack(user)}>Editar</button>
+                <button onClick={removeUser(user.id)} className='remove'>x</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -75,16 +88,17 @@ function App() {
 
     const validate = (user)=>{
       const errors = {}
-      if(!user.name) errors.name = 'El nombre es obligatorio'
-      if(!user.username) errors.username = 'El nombre de usuario es obligatorio'
-      if(!user.email) errors.email = 'El email es obligatorio'
-      if(!user.address?.street) errors.address = 'La dirección es obligatoria'
-      if(!user.phone) errors.phone = 'La dirección es obligatoria'
+      if(!user.name)              errors.name =       'El nombre es obligatorio'
+      if(!user.username)          errors.username =   'El nombre de usuario es obligatorio'
+      if(!user.email)             errors.email =      'El email es obligatorio'
+      if(!user.address?.street)   errors.address =    'La dirección es obligatoria'
+      if(!user.phone)             errors.phone =      'La dirección es obligatoria'
       return errors
     }
     const Alta = ({edit=false, user}) =>(
       <>
-        <h2>{edit && user ?  `Editar Usuario ${user.id} ${user.name}` :"Crear usuario"}</h2>{edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
+        <h2>{edit && user ?  `Editar Usuario '${user.id}': ${user.name}` : 'Crear usuario'}</h2>
+        {edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
         <form onSubmit={(e)=>{
             e.preventDefault()
             const form = e.target
@@ -116,24 +130,25 @@ function App() {
           }}>
           <label>Nombre</label>
           <input type="text" name='name' placeholder="Juan Perez" defaultValue={user ? user.name :""} />
-          {errors.name && <div>{errors.name}</div>}
+          <div className={errors.name ? '':'hidden min-height'}>{errors.name}</div>
           
           <label>Usuario</label>
           <input type="text" name='username' placeholder="juanpe" defaultValue={user ? user.username :""} />
-          {errors.username && <div>{errors.username}</div>}
+          <div className={errors.username ? '':'hidden min-height'}>{errors.username}</div>
           
           <label>Email</label>
           <input type="email" name='email' placeholder="janpe@mail.com" defaultValue={user ? user.email :""} />
-          {errors.email && <div>{errors.email}</div>}
+          <div className={errors.email ? '':'hidden min-height'}>{errors.email}</div>
           
           <label>Dirección</label>
           <input type="text" name='address' placeholder="Calle 1" defaultValue={user ? user.address.street :""} />
-          {errors.address && <div>{errors.address}</div>}
+          <div className={errors.address ? '':'hidden min-height'}>{errors.address}</div>
           
           <label>Telefono</label>
           <input type="text" name='phone' placeholder="123456789" defaultValue={user ? user.phone :""} />
-          {errors.phone && <div>{errors.phone}</div>}
-          <button type='submit' style={edit ? {backgroundColor: "green"}:{}}>{edit ? "Editar" : "Crear"}</button>
+          <div className={errors.phone ? '':'hidden min-height'}>{errors.phone}</div>
+
+          <button type='submit' className={edit ? 'btn-green':''}>{edit ? "Editar" : "Crear"}</button>
         </form>
       </>
     )

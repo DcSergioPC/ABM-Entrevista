@@ -70,6 +70,21 @@ table {
             border: 1px solid #0d6efd;
             &:last-child {
                 display: grid;
+                gap: 5px;
             }
         }
+}
+
+.btn-margin10{
+    margin-top: 10px;
+}
+.btn-green{
+    background-color: green;
+}
+.hidden {
+    visibility: hidden;
+}
+
+.min-height {
+    min-height: 24px;
 }
