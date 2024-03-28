@@ -3,8 +3,8 @@ import './App.css'
 import './styles.css'
 import { defaultUsers } from './users'
 function fetchingUsers(setUsers){
-  if (sessionStorage.getItem('users')) {
-    setUsers(JSON.parse(sessionStorage.getItem('users')))
+  if (localStorage.getItem('users')) {
+    setUsers(JSON.parse(localStorage.getItem('users')))
     console.log("Skip Fetching")
     return
   }
@@ -12,7 +12,7 @@ function fetchingUsers(setUsers){
     .then((response) => response.json())
     .then((data) => {
       console.log("Fetching")
-      sessionStorage.setItem('users', JSON.stringify(data))
+      localStorage.setItem('users', JSON.stringify(data))
       setUsers(data)
     })
 }
@@ -33,7 +33,7 @@ function App() {
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
   useEffect(()=>{
-    sessionStorage.setItem('users', JSON.stringify(users))
+    if (users) localStorage.setItem('users', JSON.stringify(users))
   }, [users])
   function removeUser(id){
     return ()=>{setUsers(users.filter(user=>user.id !== id))}
