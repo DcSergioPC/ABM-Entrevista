@@ -64,6 +64,12 @@ function App() {
           ))}
         </tbody>
       </table>
+      <button className='btn-margin10'
+        onClick={()=>{
+          localStorage.removeItem('users')
+          fetchingUsers(setUsers)
+        }}
+        >Reiniciar</button>
     </>
     )
 
