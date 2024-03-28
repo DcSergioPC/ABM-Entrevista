@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import './styles.css'
 function fetchingUsers(setUsers){
-  if (localStorage.getItem('users') && JSON.parse(localStorage.getItem('users'))) {
-    console.log(JSON.parse(localStorage.getItem('users')))
-    setUsers(JSON.parse(localStorage.getItem('users')))
+  const users = JSON.parse(localStorage.getItem('users'))
+  if (users) {
+    setUsers(users)
     console.log("Skip Fetching")
     return
   }
@@ -12,7 +12,6 @@ function fetchingUsers(setUsers){
     .then((response) => response.json())
     .then((data) => {
       console.log("Fetching")
-      localStorage.setItem('users', JSON.stringify(data))
       setUsers(data)
     })
 }
@@ -33,7 +32,7 @@ function App() {
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
   useEffect(()=>{
-    localStorage.setItem('users', JSON.stringify(users))
+    if(users) localStorage.setItem('users', JSON.stringify(users))
   }, [users])
   function removeUser(id){
     return ()=>{setUsers(users.filter(user=>user.id !== id))}
@@ -49,7 +48,7 @@ function App() {
               <th>Correo</th>
               <th>Direccion</th>
               <th>Telefono</th>
-              <th>Eliminar</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
