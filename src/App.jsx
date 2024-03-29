@@ -37,17 +37,18 @@ function App() {
   const [errors, setErrors] = useState([])
   const [modify, setModify] = useState(false)
   const [user, setUser] = useState(null)
-  function removeUser(id){
-    return ()=>{setUsers(users.filter(user => user.id !== id))}
-  }
-  function comeBack(user){
-    return ()=>{
-      setModify(true)
-      setUser(user)
-      setErrors([])
+  const Lista = ({users}) =>{
+    function comeBack(user){
+      return ()=>{
+        setModify(true)
+        setUser(user)
+        setErrors([])
+      }
     }
-  }
-  const Lista = ({users}) =>(
+    function removeUser(id){
+      return ()=>{setUsers(users.filter(user => user.id !== id))}
+    }
+    return (
     <>
       <h2>Lista de usuarios</h2>
       <table>
@@ -84,50 +85,53 @@ function App() {
         }}
         >Reiniciar</button>
     </>
-    )
+    )}
 
-    const validate = (user)=>{
-      const errors = {}
-      if(!user.name)              errors.name =       'El nombre es obligatorio'
-      if(!user.username)          errors.username =   'El nombre de usuario es obligatorio'
-      if(!user.email)             errors.email =      'El email es obligatorio'
-      if(!user.address?.street)   errors.address =    'La dirección es obligatoria'
-      if(!user.phone)             errors.phone =      'La dirección es obligatoria'
-      return errors
-    }
-    const Alta = ({edit=false, user}) =>(
+    const AltaModificacion = ({edit=false, user}) =>{
+      const validate = (user)=>{
+        const errors = {}
+        if(!user.name)              errors.name =       'El nombre es obligatorio'
+        if(!user.username)          errors.username =   'El nombre de usuario es obligatorio'
+        if(!user.email)             errors.email =      'El email es obligatorio'
+        if(!user.address?.street)   errors.address =    'La dirección es obligatoria'
+        if(!user.phone)             errors.phone =      'La dirección es obligatoria'
+        return errors
+      }
+      function formSubmit(e){
+        e.preventDefault()
+        const form = e.target
+        const newUser = {
+          id: Math.floor(50+Math.random() * 10000),
+          name: form.name.value,
+          username: form.username.value,
+          email: form.email.value,
+          address: {street: form.address.value},
+          phone: form.phone.value
+        }
+        const val = validate(newUser)
+        if(Object.keys(val).length > 0){
+          setErrors(val)
+          return
+        }
+        if(edit){
+          const index = users.findIndex(u=>u.id === user.id)
+          newUser.id = user.id
+          users[index] = {...users[index],...newUser}
+          setUsers([...users])
+          setModify(false)
+          setUser(null)
+          setErrors([])
+          return
+        }
+        setUsers([newUser,...users])
+        form.reset()
+      }
+      return (
       <>
         <h2>{edit && user ?  `Editar Usuario '${user.id}': ${user.name}` : 'Crear usuario'}</h2>
         {edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
-        <form onSubmit={(e)=>{
-            e.preventDefault()
-            const form = e.target
-            const newUser = {
-              id: Math.floor(50+Math.random() * 10000),
-              name: form.name.value,
-              username: form.username.value,
-              email: form.email.value,
-              address: {street: form.address.value},
-              phone: form.phone.value
-            }
-            const val = validate(newUser)
-            if(Object.keys(val).length > 0){
-              setErrors(val)
-              return
-            }
-            if(edit){
-              const index = users.findIndex(u=>u.id === user.id)
-              newUser.id = user.id
-              users[index] = {...users[index],...newUser}
-              setUsers([...users])
-              setModify(false)
-              setUser(null)
-              setErrors([])
-              return
-            }
-            setUsers([newUser,...users])
-            form.reset()
-          }}>
+        <form onSubmit={formSubmit}>
+
           <label>Nombre</label>
           <input type="text" name='name' placeholder="Juan Perez" defaultValue={user ? user.name :""} />
           <div className={errors.name ? '':'hidden min-height'}>{errors.name}</div>
@@ -151,13 +155,13 @@ function App() {
           <button type='submit' className={edit ? 'btn-green':''}>{edit ? "Editar" : "Crear"}</button>
         </form>
       </>
-    )
+    )}
 
   return (
     <>
       <h1>ABM</h1>
-      {!modify && <Alta />}
-      {modify && <Alta edit={true} user={user} />}
+      {!modify && <AltaModificacion />}
+      {modify && <AltaModificacion edit={true} user={user} />}
       {!modify && <Lista users={users}/>}
     </>
   )
