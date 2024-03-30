@@ -1,15 +1,28 @@
-form {
-    & > input {
-        padding: 0.5rem;
-        border-radius: 0.25rem;
-        border: 1px solid #ccc;
-        width: 100%;
-        margin: 10px;
-        text-align: left;
-        &::placeholder{
-            color: #a5a5a5;
-        }
+input {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid #ccc;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    &::placeholder{
+        color: #a5a5a5;
     }
+}
+fieldset {
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    & > legend {
+        font-weight: bold;
+    }
+    & input{
+        width: auto;
+        margin-inline: 10px;
+    }
+}
+form {
     &:required{
         content: "*";
         border-color: red;
@@ -26,20 +39,29 @@ form {
         border-radius: 0.25rem;
         cursor: pointer;
     }
-    & > div {
+    & input + div, div:last-of-type {
         text-align: left;
-        margin-left: 10px;
+        margin-right: 10px;
+        margin-bottom: 5px;
         color: red;
+    }
+    & span {
+        flex-grow: 1;
+        & > div {
+            display: flex;
+        }
+        & input {
+            flex-grow: 1;
+        }
     }
     & > label {
         text-align: left;
         display: block;
-        margin-left: 10px;
     }
 }
 
 
-.remove{
+.remove {
     background-color: red;
     color: white;
     border: 0;
@@ -56,6 +78,7 @@ table {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     overflow: hidden;
+    overflow-wrap: anywhere;
     & > thead {
         background-color: #0d6efd;
         color: white;
