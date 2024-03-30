@@ -39,14 +39,14 @@ function App() {
   const [user, setUser] = useState(null)
   window.setUser = setUser
   window.user = user
-  const Lista = ({users}) =>{
-    function comeBack(user){
-      return ()=>{
-        setModify(true)
-        setUser(user)
-        setErrors([])
-      }
+  function comeBack(user,mod){
+    return ()=>{
+      setModify(mod)
+      setUser(user)
+      setErrors([])
     }
+  }
+  const Lista = ({users}) =>{
     function removeUser(id){
       return ()=>{setUsers(users.filter(user => user.id !== id))}
     }
@@ -73,7 +73,7 @@ function App() {
               <td>{user.address.street}</td>
               <td>{user.phone}</td>
               <td>
-                <button className='btn-green' onClick={comeBack(user)}>Editar</button>
+                <button className='btn-green' onClick={comeBack(user,true)}>Editar</button>
                 <button onClick={removeUser(user.id)} className='remove'>x</button>
               </td>
             </tr>
@@ -168,20 +168,17 @@ function App() {
           const index = users.findIndex(u=>u.id === user.id)
           users[index] = {...users[index],...newUser}
           setUsers([...users])
-          setModify(false)
-          setUser(null)
-          setErrors([])
+          comeBack(null,false)()
           return
         }
         setUsers([newUser,...users])
-        setUser(null)
-        setErrors([])
+        comeBack(null,false)()
         form.reset()
       }
       return (
       <>
         <h2>{edit && user ?  `Editar Usuario '${user.id}': ${user.name}` : 'Crear usuario'}</h2>
-        {edit ? <button className='remove' onClick={()=>{setUser(null);setModify(false);setErrors([])}}>Cancelar</button> : null}
+        {edit ? <button className='remove' onClick={comeBack(null,false)}>Cancelar</button> : null}
         <form onSubmit={formSubmit}>
 
           <label htmlFor="name">Nombre</label>
